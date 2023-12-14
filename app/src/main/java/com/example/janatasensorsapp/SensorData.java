@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 
 public class SensorData extends Activity implements SensorEventListener{
     private float accelerometerX, accelerometerY, accelerometerZ, gyroscope, proximity, light;
-    //private Sensor sensorAccelerometer, sensorGyroscope, sensorProximity, sensorLight;
     private SensorManager sensorManager;
     private Context context;
     public SensorData(Context context) {
+
         this.context = context;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
@@ -30,6 +30,7 @@ public class SensorData extends Activity implements SensorEventListener{
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    //Call this method to get the sensor data from anywhere
     public SensorModel getSensorData() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalDateTime localDateTime = LocalDateTime.now();

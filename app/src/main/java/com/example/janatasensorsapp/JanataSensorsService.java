@@ -45,22 +45,18 @@ public class JanataSensorsService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
-        //startForeground(1, new Notification());
-
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
-//            startMyOwnForeground();
-//        else
-//            startForeground(SHOW_SENSOR_DATA_CHANNEL_ID, notification);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             startMyOwnForeground();
         else
+            //App crashes if this method is not called after closing it from task manager
             startForeground(1, new Notification());
 
     }
 
+    //Starts the service in foreground
     public void startMyOwnForeground() {
 
+        //Building the notification that will be used in the method "startForeground(2, notification);"
         String SERVICE_NOTIFICATION_CHANNEL_ID = "service_notification";
         String channelName = "My Background Service";
         NotificationChannel chan = null;
@@ -86,14 +82,18 @@ public class JanataSensorsService extends Service{
                 .setPriority(NotificationManager.IMPORTANCE_MIN)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build();
+
+
+        //App crashes if this method is not called after closing it from task manager
         startForeground(2, notification);
 
 
+        //Setting up the database for writing data
         sensorData = new SensorData(getApplicationContext());
         DatabaseHelper databaseHelper = DatabaseHelper.getDB(this);
 
+        //Setting up the resources for the notification that will view sensor data
         drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.janata_sensor, null);
-
         notificationIcon = (BitmapDrawable) drawable;
         largeNotificationIcon = notificationIcon.getBitmap();
 
@@ -116,7 +116,7 @@ public class JanataSensorsService extends Service{
     }
 
     public void showNotification(SensorModel sensorModel) {
-        //Show notification every 2 Minutes
+        //Show notification every 1 Minutes
         if (count % 12 != 0) {
             Log.d("TAG", "showNotification If : Count Value " + count);
             return;
@@ -155,19 +155,19 @@ public class JanataSensorsService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        //startForeground(1, new Notification());
-        //startForeground(SHOW_SENSOR_DATA_CHANNEL_ID, notification);
         return START_STICKY;
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+        //Additional code will be places if needed
         Log.d("Janata Sensor Service", "onTaskRemoved: Called");
         super.onTaskRemoved(rootIntent);
     }
 
     @Override
     public void onDestroy() {
+        //Additional code will be places if needed
         Log.d("Janata Sensor Service", "onDestroy: Called");
         super.onDestroy();
     }

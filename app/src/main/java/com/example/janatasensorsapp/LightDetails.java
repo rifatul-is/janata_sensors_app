@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LightDetails extends AppCompatActivity {
-    public final int DATA_COUNT_DISPLAY = 25;
+    public final int DATA_COUNT_DISPLAY = 25; //The number of data points to be shown on the graph.
     private LineChart lineChart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +39,14 @@ public class LightDetails extends AppCompatActivity {
         ArrayList<Entry> chartData = new ArrayList<Entry>();
         ArrayList<Entry> finalChartData = new ArrayList<Entry>();
 
+        //Getting all data from the database
         for (SensorModel data: sensorData) {
             chartData.add(new Entry(count, Float.parseFloat(String.valueOf(data.getLight()))));
             count++;
         }
 
+        //Checking retried data size fro the database
+        //Inserting the last 25 Data from the retried data
         if (chartData.size() < DATA_COUNT_DISPLAY ) {
             //Log.i("I", "onCreate: Size less then 20");
             count = 0;
@@ -53,21 +56,20 @@ public class LightDetails extends AppCompatActivity {
                 //Log.d("I", "onCreate: Light Data : " + data.getLight());
             }
         }
-        else if (chartData.size() > DATA_COUNT_DISPLAY ) {
+        else{
             //Log.i("I", "onCreate: Size more then 20");
             for (int i = chartData.size() - DATA_COUNT_DISPLAY; i < chartData.size(); i++) {
                 finalChartData.add(chartData.get(i));
                 //Log.d("I", "onCreate: Light Data : " + chartData.get(i));
             }
         }
-        else {
 
-        }
-
+        //Getting chart objects to use in graph builder
         Legend legend = lineChart.getLegend();
         XAxis xAxis = lineChart.getXAxis();
         YAxis yAxis = lineChart.getAxisLeft();
 
+        //Setting the data into the chart
         LineDataSet lineDataSet = new LineDataSet(finalChartData, "Light Sensor");
 
         ArrayList<ILineDataSet> iLineDataSet = new ArrayList<>();

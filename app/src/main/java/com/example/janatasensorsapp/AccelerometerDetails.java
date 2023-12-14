@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccelerometerDetails extends AppCompatActivity {
-    public final int DATA_COUNT_DISPLAY = 25;
+    public final int DATA_COUNT_DISPLAY = 25; //The number of data points to be shown on the graph.
     private LineChart lineChart;
     private LineData lineData;
     private ArrayList<Entry> finalChartDataX, finalChartDataY, finalChartDataZ;
@@ -43,7 +43,7 @@ public class AccelerometerDetails extends AppCompatActivity {
         finalChartDataY = new ArrayList<Entry>();
         finalChartDataZ = new ArrayList<Entry>();
 
-
+        //Getting all data from the database
         for (SensorModel data: sensorData) {
             chartDataX.add(new Entry(count, Float.parseFloat(String.valueOf(data.getAccelerometerX()))));
             chartDataY.add(new Entry(count, Float.parseFloat(String.valueOf(data.getAccelerometerY()))));
@@ -52,6 +52,8 @@ public class AccelerometerDetails extends AppCompatActivity {
             count++;
         }
 
+        //Checking retried data size fro the database
+        //Inserting the last 25 Data from the retried data
         if (chartDataX.size() < DATA_COUNT_DISPLAY ) {
             for (SensorModel data: sensorData) {
                 finalChartDataX.add(new Entry(count, Float.parseFloat(String.valueOf(data.getAccelerometerX()))));
@@ -60,21 +62,20 @@ public class AccelerometerDetails extends AppCompatActivity {
                 count++;
             }
         }
-        else if (chartDataX.size() > DATA_COUNT_DISPLAY ) {
+        else {
             for (int i = chartDataX.size() - DATA_COUNT_DISPLAY; i < chartDataX.size(); i++) {
                 finalChartDataX.add(chartDataX.get(i));
                 finalChartDataY.add(chartDataY.get(i));
                 finalChartDataZ.add(chartDataZ.get(i));
             }
         }
-        else {
 
-        }
-
+        //Getting chart objects to use in graph builder
         Legend legend = lineChart.getLegend();
         XAxis xAxis = lineChart.getXAxis();
         YAxis yAxis = lineChart.getAxisLeft();
 
+        //Setting the data into the chart
         LineDataSet lineDataSetX = new LineDataSet(finalChartDataX, "X");
         LineDataSet lineDataSetY = new LineDataSet(finalChartDataY, "Y");
         LineDataSet lineDataSetZ = new LineDataSet(finalChartDataZ, "Z");

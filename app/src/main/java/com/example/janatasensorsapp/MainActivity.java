@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Starting service for saving data
         startService(new Intent(MainActivity.this, JanataSensorsService.class));
 
+        //Checking if the service is already running in the background
         mService = new JanataSensorsService();
         mServiceIntent = new Intent(this, mService.getClass());
         if (!isMyServiceRunning(mService.getClass())) {
@@ -158,7 +159,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onDestroy() {
+        //Unregistering the Sensor Listener
         sensorManager.unregisterListener((SensorEventListener) this);
+
+        //Sending data to the Boradcase Reciver to Restart the service.
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("restartservice");
         broadcastIntent.setClass(this, ServiceRestarter.class);
